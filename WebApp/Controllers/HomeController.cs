@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApp.Models;
+using WebApp.Models.Home;
 
 namespace WebApp.Controllers
 {
@@ -20,12 +21,12 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
+            var homePage = new HomePage();
 
-        public IActionResult Privacy()
-        {
-            return View();
+            homePage.FriendsNumber = 123;
+            homePage.CountriesNumber = 12;
+            homePage.StatesNumber = 422;
+            return View(homePage);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

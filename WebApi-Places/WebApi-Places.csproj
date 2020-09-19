@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <Folder Include="Resources\CountryResource\" />
+    <Folder Include="Resources\StateResource\" />
   </ItemGroup>
 
 
