@@ -40,12 +40,10 @@ namespace WebApp.Controllers
         // POST: FriendController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateFriend createFriend)
+        public async Task<ActionResult> Create(CreateFriend createFriend)
         {
 
-            var result = _friendApi.Post(createFriend);
-
-
+            await _friendApi.PostAsync(createFriend);
 
             try
             {
