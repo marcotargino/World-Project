@@ -26,7 +26,7 @@ namespace WebApi_Friends.Resources.FriendResource
 
             if (response == null)
             {
-                return NotFound();
+                return NotFound(); //404
             }
             else
             {
@@ -47,7 +47,7 @@ namespace WebApi_Friends.Resources.FriendResource
 
             if (errors.Any())
             {
-                return UnprocessableEntity(errors);
+                return UnprocessableEntity(errors); //422
             }
 
             var response = CreateFriend(friendRequest);
@@ -68,7 +68,7 @@ namespace WebApi_Friends.Resources.FriendResource
 
             if (response == null)
             {
-                return NotFound();
+                return NotFound(); //404
             }
             else
             {
@@ -90,7 +90,7 @@ namespace WebApi_Friends.Resources.FriendResource
 
             if (response == null)
             {
-                return NotFound();
+                return NotFound(); //404
             }
             else
             {
