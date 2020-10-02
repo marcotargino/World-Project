@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using WebApi_Friends.Data;
+using AutoMapper;
 
 namespace WebApi_Friends.Resources.FriendResource
 {
@@ -10,6 +12,15 @@ namespace WebApi_Friends.Resources.FriendResource
     [Route("api/friends")]
     public class FriendsController : ControllerBase
     {
+        private readonly WebApi_FriendsContext _context;
+        private readonly IMapper _mapper;
+
+        public FriendsController(WebApi_FriendsContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
         [HttpGet]
         public ActionResult Get()
         {
@@ -34,11 +45,6 @@ namespace WebApi_Friends.Resources.FriendResource
             }
         }
 
-        private object SearchFriendById(string id)
-        {
-            throw new NotImplementedException();
-        }
-
         // POST api/<FriendsController>
         [HttpPost]
         public ActionResult Post([FromBody] FriendRequest friendRequest)
@@ -53,11 +59,6 @@ namespace WebApi_Friends.Resources.FriendResource
             var response = CreateFriend(friendRequest);
 
             return CreatedAtAction(nameof(Get), new { response.Id }, response); //201
-        }
-
-        private FriendResponse CreateFriend(FriendRequest friendRequest)
-        {
-            throw new NotImplementedException();
         }
 
         // PUT api/<FriendsController>/5
@@ -77,11 +78,6 @@ namespace WebApi_Friends.Resources.FriendResource
             }
         }
 
-        private void ModifyFriend(FriendRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
         // DELETE api/<FriendsController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete(string id)
@@ -97,6 +93,38 @@ namespace WebApi_Friends.Resources.FriendResource
                 RemoveFriend(id);
                 return NoContent(); //204
             }
+        }
+
+        //////////////////////////////////////////////////
+
+        private FriendResponse SearchFriendById(string id)
+        {
+            var friend = _context.Friends.Find(id);
+
+            if (friend == null)
+            {
+                return null;
+            }
+            else
+            {
+                return _mapper.Map<FriendResponse>(friend);
+            }
+        }
+
+        private FriendResponse CreateFriend(FriendRequest friendRequest)
+        {
+            var friend = _mapper.Map<Friend>(friendRequest);
+            friend.Id = Guid.NewGuid();
+
+            _context.Friends.Add(friend);
+            _context.SaveChanges();
+
+            return _mapper.Map<FriendResponse>(friend);
+        }
+
+        private void ModifyFriend(FriendRequest request)
+        {
+            throw new NotImplementedException();
         }
 
         private void RemoveFriend(string id)
@@ -120,6 +148,19 @@ namespace WebApi_Friends.Resources.FriendResource
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class Friend
+    {
+        public Guid Id { get; set; }
+        public String FirstName { get; set; }
+        public String LastName { get; set; }
+        public DateTime BirthDate { get; set; }
+        public String ProfilePicture { get; set; }
+        public String Email { get; set; }
+        public String PhoneNumber { get; set; }
+        public String Country { get; set; }
+        public String State { get; set; }
     }
 
     public class FriendResponse

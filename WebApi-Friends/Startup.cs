@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using WebApi_Friends.Data;
+using AutoMapper;
 
 namespace WebApi_Friends
 {
@@ -31,6 +32,8 @@ namespace WebApi_Friends
 
             services.AddDbContext<WebApi_FriendsContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("WebApi_FriendsContext")));
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

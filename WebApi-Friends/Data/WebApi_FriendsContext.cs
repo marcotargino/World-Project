@@ -14,6 +14,6 @@ namespace WebApi_Friends.Data
         {
         }
 
-        public DbSet<WebApi_Friends.Resources.FriendResource.FriendResponse> FriendResponse { get; set; }
+        public DbSet<Friend> Friends { get; set; }
     }
 }

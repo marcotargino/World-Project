@@ -23,16 +23,16 @@ namespace WebApi_Friends.Resources
 
         // GET: api/FriendResponses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FriendResponse>>> GetFriendResponse()
+        public async Task<ActionResult<IEnumerable<Friend>>> GetFriendResponse()
         {
-            return await _context.FriendResponse.ToListAsync();
+            return await _context.Friends.ToListAsync();
         }
 
         // GET: api/FriendResponses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FriendResponse>> GetFriendResponse(Guid id)
+        public async Task<ActionResult<Friend>> GetFriendResponse(Guid id)
         {
-            var friendResponse = await _context.FriendResponse.FindAsync(id);
+            var friendResponse = await _context.Friends.FindAsync(id);
 
             if (friendResponse == null)
             {
@@ -78,9 +78,9 @@ namespace WebApi_Friends.Resources
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<FriendResponse>> PostFriendResponse(FriendResponse friendResponse)
+        public async Task<ActionResult<Friend>> PostFriendResponse(Friend friendResponse)
         {
-            _context.FriendResponse.Add(friendResponse);
+            _context.Friends.Add(friendResponse);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetFriendResponse", new { id = friendResponse.Id }, friendResponse);
@@ -88,15 +88,15 @@ namespace WebApi_Friends.Resources
 
         // DELETE: api/FriendResponses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<FriendResponse>> DeleteFriendResponse(Guid id)
+        public async Task<ActionResult<Friend>> DeleteFriendResponse(Guid id)
         {
-            var friendResponse = await _context.FriendResponse.FindAsync(id);
+            var friendResponse = await _context.Friends.FindAsync(id);
             if (friendResponse == null)
             {
                 return NotFound();
             }
 
-            _context.FriendResponse.Remove(friendResponse);
+            _context.Friends.Remove(friendResponse);
             await _context.SaveChangesAsync();
 
             return friendResponse;
@@ -104,7 +104,7 @@ namespace WebApi_Friends.Resources
 
         private bool FriendResponseExists(Guid id)
         {
-            return _context.FriendResponse.Any(e => e.Id == id);
+            return _context.Friends.Any(e => e.Id == id);
         }
     }
 }
