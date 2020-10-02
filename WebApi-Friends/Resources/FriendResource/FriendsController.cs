@@ -25,7 +25,7 @@ namespace WebApi_Friends.Resources.FriendResource
         [HttpGet]
         public ActionResult Get()
         {
-            var list = new List<FriendResponse>();
+            var list = SearchFriends();
 
             return Ok(list); //200
         }
@@ -98,6 +98,12 @@ namespace WebApi_Friends.Resources.FriendResource
 
         //////////////////////////////////////////////////
 
+        private IEnumerable<FriendResponse> SearchFriends()
+        {
+            var friends = _context.Friends.ToList();
+            return _mapper.Map<IEnumerable<FriendResponse>>(friends);
+        }
+
         private FriendResponse SearchFriendById(Guid id)
         {
             var friend = _context.Friends.Find(id);
@@ -125,10 +131,9 @@ namespace WebApi_Friends.Resources.FriendResource
 
         private void ModifyFriend(Guid id, FriendRequest request)
         {
-            var friend = _mapper.Map<Friend>(request);
-            friend.Id = id;
-
-            _context.Entry(friend).State = EntityState.Modified;
+            var friend = _context.Friends.Find(id);
+            friend = _mapper.Map(request, friend);
+            
             _context.Friends.Update(friend);
             _context.SaveChanges();
         }
@@ -144,6 +149,8 @@ namespace WebApi_Friends.Resources.FriendResource
             _context.Friends.Remove(friend);
             _context.SaveChanges();
         }
+
+        
     }
 
     public class FriendRequest
@@ -159,7 +166,14 @@ namespace WebApi_Friends.Resources.FriendResource
 
         internal List<string> Errors()
         {
-            throw new NotImplementedException();
+            var list = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(FirstName))
+            {
+                list.Add("The First Name field is required.");
+            }
+
+            return list;
         }
     }
 
