@@ -44,11 +44,13 @@ namespace WebApp.Controllers
         // POST: FriendController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateFriend createFriend)
+        public async Task<ActionResult> Create(CreateFriend createFriend)
         {
             var urlPicture = UploadProfilePicture(createFriend.ProfilePicture);
 
-            _friendApi.PostAsync(createFriend);
+            createFriend.UrlPicture = urlPicture;
+
+            await _friendApi.PostAsync(createFriend);
 
             try
             {
@@ -107,9 +109,9 @@ namespace WebApp.Controllers
         private string UploadProfilePicture(IFormFile profilePicture)
         {
             var reader = profilePicture.OpenReadStream();
-            var cloudStorageAccount = CloudStorageAccount.Parse("##");
+            var cloudStorageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=atazure;AccountKey=KfLMRh/w+nHjvUmPdhnBQtgYamgn418nqxMqOrk0T4Kxt14PnUXBpJuH+dEgvIHWBoeXq4H+Fi6NKZK84yNUIw==;EndpointSuffix=core.windows.net");
             var blobClient = cloudStorageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference("post-images");
+            var container = blobClient.GetContainerReference("fotoperfil");
             container.CreateIfNotExistsAsync();
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
             blob.UploadFromStream(reader);

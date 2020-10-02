@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace WebApi_Friends.Resources.FriendResource
 {
     [ApiController]
-    [Route("api/friends")]
+    [Route("api/[controller]")]
     public class FriendsController : ControllerBase
     {
         private readonly WebApi_FriendsContext _context;

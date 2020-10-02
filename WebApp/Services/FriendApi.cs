@@ -18,7 +18,7 @@ namespace WebApp.Services
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.BaseAddress = new System.Uri("http://localhost:59614/api/");
+            _httpClient.BaseAddress = new System.Uri("http://localhost:5000");
         }
 
         public async Task<PostFriendResult> PostAsync(CreateFriend createFriend)
@@ -30,7 +30,7 @@ namespace WebApp.Services
 
             var content = new StringContent(createFriendJson, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("friends", content);
+            var response = await _httpClient.PostAsync("api/Friends", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -46,7 +46,7 @@ namespace WebApp.Services
 
         public async Task <List<ListFriend>> GetAsync()
         {
-            var response = await _httpClient.GetAsync("/api/friends");
+            var response = await _httpClient.GetAsync("api/Friends");
             var responseContent = await response.Content.ReadAsStringAsync();
             var list = JsonConvert.DeserializeObject<List<ListFriend>>(responseContent);
             return list;
