@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 using WebApp.Models.Friend;
 using WebApp.Services;
+using CloudStorageAccount = Microsoft.Azure.Storage.CloudStorageAccount;
 
 namespace WebApp.Controllers
 {
@@ -101,16 +104,14 @@ namespace WebApp.Controllers
             }
         }
 
-        private Task UploadProfilePicture(IFormFile profilePicture)
+        private string UploadProfilePicture(IFormFile profilePicture)
         {
-            return "";
-
             var reader = profilePicture.OpenReadStream();
             var cloudStorageAccount = CloudStorageAccount.Parse("##");
             var blobClient = cloudStorageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContaineReference("post-images");
-            container.CreateIfNotExists();
-            var blob = container.GetBlockBlobReference(fileName);
+            var container = blobClient.GetContainerReference("post-images");
+            container.CreateIfNotExistsAsync();
+            var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
             blob.UploadFromStream(reader);
             var destinyOfThePictureInTheCloud = blob.Uri.ToString();
 
