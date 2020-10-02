@@ -11,6 +11,7 @@ namespace WebApi_Friends.AutomapperProfiles
     {
         public FriendProfile()
         {
+            CreateMap<FriendRequest, Friend>();
             CreateMap<Friend, FriendResponse>();
         }
     }

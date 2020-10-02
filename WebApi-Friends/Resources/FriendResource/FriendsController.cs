@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using WebApi_Friends.Data;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi_Friends.Resources.FriendResource
 {
@@ -31,7 +32,7 @@ namespace WebApi_Friends.Resources.FriendResource
 
         // GET api/<FriendsController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(string id)
+        public ActionResult Get(Guid id)
         {
             var response = SearchFriendById(id);
 
@@ -63,7 +64,7 @@ namespace WebApi_Friends.Resources.FriendResource
 
         // PUT api/<FriendsController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(string id, [FromBody] FriendRequest request)
+        public ActionResult Put(Guid id, [FromBody] FriendRequest request)
         {
             var response = SearchFriendById(id);
 
@@ -73,14 +74,14 @@ namespace WebApi_Friends.Resources.FriendResource
             }
             else
             {
-                ModifyFriend(request);
+                ModifyFriend(id, request);
                 return NoContent(); //204
             }
         }
 
         // DELETE api/<FriendsController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(string id)
+        public ActionResult Delete(Guid id)
         {
             var response = SearchFriendById(id);
 
@@ -97,7 +98,7 @@ namespace WebApi_Friends.Resources.FriendResource
 
         //////////////////////////////////////////////////
 
-        private FriendResponse SearchFriendById(string id)
+        private FriendResponse SearchFriendById(Guid id)
         {
             var friend = _context.Friends.Find(id);
 
@@ -122,14 +123,26 @@ namespace WebApi_Friends.Resources.FriendResource
             return _mapper.Map<FriendResponse>(friend);
         }
 
-        private void ModifyFriend(FriendRequest request)
+        private void ModifyFriend(Guid id, FriendRequest request)
         {
-            throw new NotImplementedException();
+            var friend = _mapper.Map<Friend>(request);
+            friend.Id = id;
+
+            _context.Entry(friend).State = EntityState.Modified;
+            _context.Friends.Update(friend);
+            _context.SaveChanges();
         }
 
-        private void RemoveFriend(string id)
+        private void RemoveFriend(Guid id)
         {
-            throw new NotImplementedException();
+            var friend = _context.Friends.Find(id);
+
+            if (friend == null)
+            {
+                return;
+            }
+            _context.Friends.Remove(friend);
+            _context.SaveChanges();
         }
     }
 
