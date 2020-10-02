@@ -44,11 +44,11 @@ namespace WebApp.Controllers
         // POST: FriendController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CreateFriend createFriend)
+        public ActionResult Create(CreateFriend createFriend)
         {
-            var urlPicture = await UploadProfilePicture(CreateFriend.ProfilePicture);
+            var urlPicture = UploadProfilePicture(createFriend.ProfilePicture);
 
-            await _friendApi.PostAsync(createFriend);
+            _friendApi.PostAsync(createFriend);
 
             try
             {
@@ -115,7 +115,7 @@ namespace WebApp.Controllers
             blob.UploadFromStream(reader);
             var destinyOfThePictureInTheCloud = blob.Uri.ToString();
 
-            throw new NotImplementedException();
+            return destinyOfThePictureInTheCloud;
         }
     }
 }
