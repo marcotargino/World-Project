@@ -17,5 +17,6 @@ namespace WebApp.Models.Friend
         public String PhoneNumber { get; set; }
         public String Country { get; set; }
         public String State { get; set; }
+        public List<string> Errors { get; internal set; }
     }
 }

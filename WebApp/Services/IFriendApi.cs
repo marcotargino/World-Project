@@ -6,8 +6,7 @@ namespace WebApp.Services
 {
     public interface IFriendApi
     {
-        
-        Task<PostFriendResult> PostAsync(CreateFriend createFriend);
+        Task<CreateFriend> PostAsync(CreateFriend createFriend);
         Task<List<ListFriend>> GetAsync();
     }
 }

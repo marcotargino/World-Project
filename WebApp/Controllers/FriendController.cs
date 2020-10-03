@@ -15,7 +15,7 @@ namespace WebApp.Controllers
 {
     public class FriendController : Controller
     {
-        private IFriendApi _friendApi;
+        private readonly IFriendApi _friendApi;
 
         public FriendController(IFriendApi friendApi)
         {
@@ -109,10 +109,10 @@ namespace WebApp.Controllers
         private string UploadProfilePicture(IFormFile profilePicture)
         {
             var reader = profilePicture.OpenReadStream();
-            var cloudStorageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=atazure;AccountKey=KfLMRh/w+nHjvUmPdhnBQtgYamgn418nqxMqOrk0T4Kxt14PnUXBpJuH+dEgvIHWBoeXq4H+Fi6NKZK84yNUIw==;EndpointSuffix=core.windows.net");
+            var cloudStorageAccount = CloudStorageAccount.Parse(@"DefaultEndpointsProtocol=https;AccountName=atazure;AccountKey=KfLMRh/w+nHjvUmPdhnBQtgYamgn418nqxMqOrk0T4Kxt14PnUXBpJuH+dEgvIHWBoeXq4H+Fi6NKZK84yNUIw==;EndpointSuffix=core.windows.net");
             var blobClient = cloudStorageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference("fotoperfil");
-            container.CreateIfNotExistsAsync();
+            container.CreateIfNotExists();
             var blob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
             blob.UploadFromStream(reader);
             var destinyOfThePictureInTheCloud = blob.Uri.ToString();

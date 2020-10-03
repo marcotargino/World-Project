@@ -18,30 +18,27 @@ namespace WebApp.Services
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.BaseAddress = new System.Uri("http://localhost:5000");
+            _httpClient.BaseAddress = new System.Uri("http://localhost:5000/");
         }
 
-        public async Task<PostFriendResult> PostAsync(CreateFriend createFriend)
+        public async Task<CreateFriend> PostAsync(CreateFriend createFriend)
         {
             var createFriendJson = JsonConvert.SerializeObject(createFriend);
-
-            
-            
-
             var content = new StringContent(createFriendJson, Encoding.UTF8, "application/json");
-
             var response = await _httpClient.PostAsync("api/Friends", content);
 
             if (response.IsSuccessStatusCode)
             {
-                return new PostFriendResult { Success = true };
+                return createFriend;
             }
-            else
+            else if(response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var errors = JsonConvert.DeserializeObject<List<string>>(responseContent);
-                return new PostFriendResult { Errors = errors};
+                createFriend.Errors = errors;
             }
+
+            return createFriend;
         }
 
         public async Task <List<ListFriend>> GetAsync()
@@ -53,3 +50,19 @@ namespace WebApp.Services
         }
     }
 }
+
+
+/*
+ 
+public async Task<CriarAmigoViewModel> PostAmigo(CriarAmigoViewModel criarPaisViewModel)
+        {
+            var criarPaisViewModelJson = JsonConvert.SerializeObject(criarPaisViewModel);
+
+            var conteudo = new StringContent(criarPaisViewModelJson, Encoding.UTF8, "application/json");
+
+            await _httpClient.PostAsync("https://localhost:44328/api/amigos", conteudo);
+
+            return criarPaisViewModel;
+        }
+ 
+ */
