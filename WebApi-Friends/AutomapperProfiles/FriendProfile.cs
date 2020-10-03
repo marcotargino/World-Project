@@ -11,7 +11,11 @@ namespace WebApi_Friends.AutomapperProfiles
     {
         public FriendProfile()
         {
-            CreateMap<FriendRequest, Friend>();
+            CreateMap<FriendRequest, Friend>()
+            .ForMember(
+                dest => dest.ProfilePicture,
+                opt => opt.MapFrom(src => src.UrlPicture)
+            );
             CreateMap<Friend, FriendResponse>();
         }
     }
