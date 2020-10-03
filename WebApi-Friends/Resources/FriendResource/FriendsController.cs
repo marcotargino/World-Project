@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace WebApi_Friends.Resources.FriendResource
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/friends")]
     public class FriendsController : ControllerBase
     {
         private readonly WebApi_FriendsContext _context;
@@ -94,6 +94,18 @@ namespace WebApi_Friends.Resources.FriendResource
                 RemoveFriend(id);
                 return NoContent(); //204
             }
+        }
+
+        [HttpGet("{id}/places")]
+        public ActionResult GetFriendPlaces([FromRoute] Guid id)
+        {
+            var list = new List<PlaceResponse>();
+
+            var friend = SearchFriendById(id);
+
+            return _mapper.Map<PlaceResponse>(friend.Places);
+            
+            return Ok();
         }
 
         //////////////////////////////////////////////////
@@ -202,5 +214,13 @@ namespace WebApi_Friends.Resources.FriendResource
         public String PhoneNumber { get; set; }
         public String Country { get; set; }
         public String State { get; set; }
+    }
+
+    public class PlaceResponse
+    {
+        public String CountryFlag { get; set; }
+        public String StateFlag { get; set; }
+        public String CountryName { get; set; }
+        public String StateName { get; set; }
     }
 }
